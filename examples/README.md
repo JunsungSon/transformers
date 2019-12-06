@@ -342,6 +342,47 @@ eval_acc = 0.8338998300509847
 eval_loss = 0.44457291918821606
 ```
 
+## HotPotQA
+
+Based on the script [`run_hotpotqa.py`](https://github.com/huggingface/transformers/blob/master/examples/run_hotpotqa.py).
+
+#### Fine-tuning on HotPotQA
+
+This example code fine-tunes BERT on the HotPotQA dataset. It runs in 24 min (with BERT-base) or 68 min (with BERT-large) 
+on a single tesla V100 16GB. The data for HotPotQA can be downloaded with the following links and should be saved in a 
+$SQUAD_DIR directory.
+
+* [train_v1.1.json](http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_train_v1.1.json)
+* [dev_distractor_v1.json](http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_dev_distractor_v1.json)
+* [dev_fullwiki_v1.json](http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_dev_fullwiki_v1.json)
+* [evaluate_v1.py](https://raw.githubusercontent.com/hotpotqa/hotpot/master/hotpot_evaluate_v1.py)
+
+```bash
+export HOTPOTQA_DIR=/path/to/HOTPOTQA
+
+python run_hotpotqa.py \
+  --model_type bert \
+  --model_name_or_path bert-base-cased \
+  --do_train \
+  --do_eval \
+  --do_lower_case \
+  --train_file $SQUAD_DIR/train_v1.1.json \
+  --predict_file $SQUAD_DIR/dev_fullwiki_v1.json \
+  --per_gpu_train_batch_size 12 \
+  --learning_rate 3e-5 \
+  --num_train_epochs 2.0 \
+  --max_seq_length 384 \
+  --doc_stride 128 \
+  --output_dir /tmp/debug_hotpotqa/
+```
+
+Training with the previously defined hyper-parameters yields the following results:
+
+```bash
+f1 = 
+exact_match = 
+```
+
 ## SQuAD
 
 Based on the script [`run_squad.py`](https://github.com/huggingface/transformers/blob/master/examples/run_squad.py).
