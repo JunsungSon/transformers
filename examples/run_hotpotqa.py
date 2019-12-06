@@ -54,7 +54,7 @@ from utils_hotpotqa import (read_hotpotqa_examples, convert_examples_to_features
 # The follwing import is the official SQuAD evaluation script (2.0).
 # You can remove it from the dependencies if you are using this script outside of the library
 # We've added it here for automated tests (see examples/test_examples.py file)
-from utils_squad_evaluate import EVAL_OPTS, main as evaluate_on_squad
+from utils_hotpotqa_evaluate import EVAL_OPTS, main as evaluate_on_hotpotqa
 
 logger = logging.getLogger(__name__)
 
@@ -258,7 +258,9 @@ def evaluate(args, model, tokenizer, prefix=""):
             else:
                 result = RawResult(unique_id    = unique_id,
                                    start_logits = to_list(outputs[0][i]),
-                                   end_logits   = to_list(outputs[1][i]))
+                                   end_logits   = to_list(outputs[1][i]),
+                                   cls_logits   = to_list(outputs[2][i]),
+                                   sf_logits    = to_list(outputs[3][i]))
             all_results.append(result)
 
     evalTime = timeit.default_timer() - start_time
@@ -267,10 +269,6 @@ def evaluate(args, model, tokenizer, prefix=""):
     # Compute predictions
     output_prediction_file = os.path.join(args.output_dir, "predictions_{}.json".format(prefix))
     output_nbest_file = os.path.join(args.output_dir, "nbest_predictions_{}.json".format(prefix))
-    if args.version_2_with_negative:
-        output_null_log_odds_file = os.path.join(args.output_dir, "null_odds_{}.json".format(prefix))
-    else:
-        output_null_log_odds_file = None
 
     if args.model_type in ['xlnet', 'xlm']:
         # XLNet uses a more complex post-processing procedure
@@ -282,18 +280,16 @@ def evaluate(args, model, tokenizer, prefix=""):
     else:
         write_predictions(examples, features, all_results, args.n_best_size,
                         args.max_answer_length, args.do_lower_case, output_prediction_file,
-                        output_nbest_file, output_null_log_odds_file, args.verbose_logging,
-                        args.version_2_with_negative, args.null_score_diff_threshold)
+                        output_nbest_file, args.verbose_logging)
 
     # Evaluate with the official SQuAD script
     evaluate_options = EVAL_OPTS(data_file=args.predict_file,
-                                 pred_file=output_prediction_file,
-                                 na_prob_file=output_null_log_odds_file)
-    results = evaluate_on_squad(evaluate_options)
+                                 pred_file=output_prediction_file)
+    results = evaluate_on_hotpotqa(evaluate_options)
     return results
 
 
-def load_and_cache_examples(args, tokenizer, label_list, evaluate=False, output_examples=False):
+def load_and_cache_examples(args, tokenizer, label_list=None, evaluate=False, output_examples=False):
     if args.local_rank not in [-1, 0] and not evaluate:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 

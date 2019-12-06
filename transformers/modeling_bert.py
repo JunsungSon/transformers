@@ -1352,7 +1352,7 @@ class BertForHotPotQA(BertPreTrainedModel):
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
 
-        outputs = (start_logits, end_logits,) + outputs[2:]
+        outputs = (start_logits, end_logits, cls_logits, sf_logits) + outputs[2:]
 
         if labels is not None:
             if self.num_labels == 1:
