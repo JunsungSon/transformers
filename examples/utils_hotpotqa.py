@@ -45,7 +45,7 @@ class HotPotQAExample(object):
                  qas_id,
                  question_text,
                  doc_tokens,
-                 paragraph_text,
+                 paragraph_title,
                  paragraph_index,
                  orig_answer_text=None,
                  start_position=None,
@@ -56,7 +56,7 @@ class HotPotQAExample(object):
         self.qas_id = qas_id
         self.question_text = question_text
         self.doc_tokens = doc_tokens
-        self.paragraph_text = paragraph_text
+        self.paragraph_title = paragraph_title
         self.paragraph_index = paragraph_index
         self.orig_answer_text = orig_answer_text
         self.start_position = start_position
