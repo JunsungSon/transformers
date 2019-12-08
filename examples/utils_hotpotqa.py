@@ -304,6 +304,9 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
             else:
                 sf_label = 0
             label = label_list.index(example.label)
+        else:
+            sf_label = None
+            label = None
 
         for (doc_span_index, doc_span) in enumerate(doc_spans):
             tokens = []

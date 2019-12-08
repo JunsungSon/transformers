@@ -1354,6 +1354,7 @@ class BertForHotPotQA(BertPreTrainedModel):
 
         outputs = (start_logits, end_logits, cls_logits, sf_logits) + outputs[2:]
 
+        loss = None
         if labels is not None:
             if self.num_labels == 1:
                 #  We are doing regression
