@@ -221,6 +221,10 @@ def read_hotpotqa_examples(input_file, is_training):
                     has_answer=has_answer,
                     is_supporting_fact=is_supporting_fact)
                 examples.append(example)
+    if is_training:
+        logger.info(f"examples len: {len(examples)}")
+        examples = examples[:int(len(examples) * 0.1)]
+        logger.info(f"scaled examples len: {len(examples)}")
     return examples
 
 
