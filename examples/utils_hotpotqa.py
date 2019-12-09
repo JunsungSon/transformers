@@ -698,7 +698,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
 
                 pred_text = nbest_json[0]["text"]
 #                all_predictions[example.qas_id] = nbest_json[0]["text"]
-#                all_nbest_json[example.qas_id] = nbest_json
+                all_nbest_json[example.qas_id] = nbest_json
             elif cls == 1:
                 pred_text = "no"
             else:
@@ -712,6 +712,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
 
             if cls_count[cls] == 0:
                 cls_max_pred[cls] = cls_pred[cls]
+                cls_max_text[cls] = pred_text
             cls_count[cls] += 1
             if cls_max_pred[cls] < cls_pred[cls]:
                 cls_max_pred[cls] = cls_pred[cls]
@@ -749,8 +750,8 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
         writer.write(json.dumps(all_predictions))
 #        writer.write(json.dumps(all_predictions, indent=4) + "\n")
 
-#    with open(output_nbest_file, "w") as writer:
-#        writer.write(json.dumps(all_nbest_json, indent=4) + "\n")
+    with open(output_nbest_file, "w") as writer:
+        writer.write(json.dumps(all_nbest_json, indent=4) + "\n")
 
     return all_predictions
 
