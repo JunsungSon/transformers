@@ -722,15 +722,15 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
         else:
             sf_max = np.argmax(sf_count)
         if sf_max == 1:
-            if all_sp_predictions.get(example.qas_id):
+            if all_sp_predictions.get(example.qas_id) is None:
                 all_sp_predictions[example.qas_id] = []
             all_sp_predictions[example.qas_id].append([example.paragraph_title, example.paragraph_index])
 
         cls_max = np.argmax(cls_count)
-        for i, pred in cls_max_pred:
+        for i, pred in enumerate(cls_max_pred):
             if (cls_count[i] == cls_count[cls_max]) and (cls_max_pred[i] > cls_max_pred[cls_max]):
                 cls_max = i
-        if all_cls_predictions.get(example.qas_id):
+        if all_cls_predictions.get(example.qas_id) is None:
             all_cls_predictions[example.qas_id] = {"count": [0, 0, 0], "max_pred": [0, 0, 0], "text": ["yes", "no", "span"]}
         all_cls_predictions[example.qas_id]["count"][cls_max] += 1
         all_cls_predictions[example.qas_id]["max_pred"][cls_max] = cls_max_pred[cls_max]
@@ -740,7 +740,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
     all_predictions["answer"] = {}
     for id in all_cls_predictions.keys():
         max_index = np.argmax(all_cls_predictions[id]["count"])
-        for i, pred in all_cls_predictions[id]["max_pred"]:
+        for i, pred in enumerate(all_cls_predictions[id]["max_pred"]):
             if (all_cls_predictions[id]["count"][i] == all_cls_predictions[id]["count"][max_index]) and (all_cls_predictions[id]["max_pred"][i] > all_cls_predictions[id]["max_pred"][max_index]):
                 max_index = i
         all_predictions["answer"][id] = all_cls_predictions[id]["text"][max_index]

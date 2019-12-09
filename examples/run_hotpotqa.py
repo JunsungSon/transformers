@@ -259,8 +259,8 @@ def evaluate(args, model, tokenizer, prefix=""):
                 result = RawResult(unique_id    = unique_id,
                                    start_logits = to_list(outputs[0][i]),
                                    end_logits   = to_list(outputs[1][i]),
-                                   cls_logits   = to_list(outputs[2][i]),
-                                   sf_logits    = to_list(outputs[3][i]))
+                                   cls_logits   = outputs[2][i],
+                                   sf_logits    = outputs[3][i])
             all_results.append(result)
 
     evalTime = timeit.default_timer() - start_time

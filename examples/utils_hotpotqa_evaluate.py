@@ -282,7 +282,7 @@ def main(OPTS):
 #    with open(OPTS.na_prob_file) as f:
 #      na_probs = json.load(f)
 #  else:
-  na_probs = {k: 0.0 for k in preds}
+  na_probs = {k: 0.0 for k in preds['answer']}
   qid_to_has_ans = make_qid_to_has_ans(dataset)  # maps qid to True/False
   has_ans_qids = [k for k, v in qid_to_has_ans.items() if v]
   no_ans_qids = [k for k, v in qid_to_has_ans.items() if not v]
